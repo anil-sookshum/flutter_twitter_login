@@ -98,8 +98,8 @@ class TwitterLogin {
   ///
   /// See the [TwitterLoginResult] class for more documentation.
   Future<TwitterLoginResult> authorize() async {
-    final Map<dynamic, dynamic> result = await (channel.invokeMethod(
-        'authorize', _keys) as FutureOr<Map<dynamic, dynamic>>);
+    final Map<dynamic, dynamic> result =
+        await channel.invokeMethod('authorize', _keys);
 
     return new TwitterLoginResult._(result.cast<String, dynamic>());
   }
