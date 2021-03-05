@@ -15,18 +15,18 @@ class TwitterLogin {
   TwitterLogin({
     required this.consumerKey,
     required this.consumerSecret,
-  })   : assert(consumerKey != null && consumerKey.isNotEmpty,
-            'Consumer key may not be null or empty.'),
-        assert(consumerSecret != null && consumerSecret.isNotEmpty,
+  })   : assert(
+            consumerKey.isNotEmpty, 'Consumer key may not be null or empty.'),
+        assert(consumerSecret.isNotEmpty,
             'Consumer secret may not be null or empty.'),
         _keys = {
           'consumerKey': consumerKey,
           'consumerSecret': consumerSecret,
         };
 
-  final String? consumerKey;
-  final String? consumerSecret;
-  final Map<String, String?> _keys;
+  final String consumerKey;
+  final String consumerSecret;
+  final Map<String, String> _keys;
 
   /// Returns whether the user is currently logged in or not.
   ///
@@ -59,7 +59,7 @@ class TwitterLogin {
       return null;
     }
 
-    return new TwitterSession.fromMap(session.cast<String, dynamic>());
+    return TwitterSession.fromMap(session.cast<String, dynamic>());
   }
 
   /// Logs the user in.
@@ -124,7 +124,7 @@ class TwitterLoginResult {
 
   /// Only available when the [status] equals [TwitterLoginStatus.loggedIn],
   /// otherwise null.
-  final TwitterSession? session;
+  late final TwitterSession session;
 
   /// Only available when the [status] equals [TwitterLoginStatus.error]
   /// otherwise null.
@@ -132,20 +132,20 @@ class TwitterLoginResult {
 
   TwitterLoginResult._(Map<String, dynamic> map)
       : status = _parseStatus(map['status'], map['errorMessage']),
-        session = map['session'] != null
-            ? new TwitterSession.fromMap(
-                map['session'].cast<String, dynamic>(),
-              )
-            : null,
+        session =
+            TwitterSession.fromMap(map['session'].cast<String, dynamic>()),
+        /* map['session'] != null
+            ? TwitterSession.fromMap(map['session'].cast<String, dynamic>())
+            : null, */
         errorMessage = map['errorMessage'];
 
-  static TwitterLoginStatus _parseStatus(String? status, String? errorMessage) {
+  static TwitterLoginStatus _parseStatus(String status, String errorMessage) {
     switch (status) {
       case 'loggedIn':
         return TwitterLoginStatus.loggedIn;
       case 'error':
         // Kind of a hack, but the only way of determining this.
-        if (errorMessage!.contains('canceled') ||
+        if (errorMessage.contains('canceled') ||
             errorMessage.contains('cancelled')) {
           return TwitterLoginStatus.cancelledByUser;
         }
@@ -153,7 +153,7 @@ class TwitterLoginResult {
         return TwitterLoginStatus.error;
     }
 
-    throw new StateError('Invalid status: $status');
+    throw StateError('Invalid status: $status');
   }
 }
 
@@ -178,17 +178,17 @@ enum TwitterLoginStatus {
 /// the [token] and [secret] are needed for making authenticated Twitter API
 /// calls.
 class TwitterSession {
-  final String? secret;
-  final String? token;
+  final String secret;
+  final String token;
 
   /// The user's unique identifier, usually a long series of numbers.
-  final String? userId;
+  final String userId;
 
   /// The user's Twitter handle.
   ///
   /// For example, if you can visit your Twitter profile by typing the URL
   /// http://twitter.com/hello, your Twitter handle (or username) is "hello".
-  final String? username;
+  final String username;
 
   /// Constructs a new access token instance from a [Map].
   ///
