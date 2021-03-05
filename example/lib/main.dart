@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Text(_message),
+              new Text(_me!ssage),
               new RaisedButton(
                 child: new Text('Log in'),
                 onPressed: _login,
